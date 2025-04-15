@@ -1,15 +1,17 @@
 /* Container for the entire debate room */
 .debate-room-container {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    padding: 20px;
-  }
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #6a4c9c, #2e3d65); /* Same purple gradient as nav */
+  padding: 20px;
+}
   
   /* Box that contains everything inside the debate room */
   .debate-room-box {
+    position: relative;
     width: 100%;
     max-width: 800px;
     background: white;
@@ -24,15 +26,65 @@
     text-align: center;
     font-size: 36px;
     font-weight: bold;
-    color: #3b3b3b;
+    color: #ffffff;
+    background: linear-gradient(135deg, #7b2ff7, #f107a3); /* Purple gradient */
+    padding: 20px 40px;
+    border-radius: 25px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    margin: 30px auto;
+    max-width: 35%;
+  
+    /* Simulated black stroke using multiple shadows */
+    text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000;
   }
+  
+  
+  
   
   .team-info {
     font-size: 22px;       /* Increased from 18px */
     font-weight: 700;      /* Bold */
     color: #5c6ac4;        /* Same indigo-ish color */
   }
+
+    /* Text color for 'Against' Team */
+  .text-red {
+    color: red;
+  }
+
+  /* Text color for 'For' Team */
+  .text-green {
+    color: green;
+  }
+
+
+  .team-box {
+    position: absolute;
+    top: 16px;   /* Adjust top margin */
+    left: 16px;  /* Adjust left margin */
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    white-space: nowrap; /* Ensures it's all in one line */
+  }
   
+  .team-name {
+    text-transform: capitalize;
+    margin-left: 6px;
+    font-weight: 600;
+    color: #76ff03; /* Optional: gives a greenish tint to the team name */
+  }
+  
+
   
   .error-message {
     text-align: center;
@@ -110,7 +162,7 @@
     padding: 12px 20px;
     background-color: #5c6ac4;
     color: white;
-    border-radius: 30px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     font-weight: bold;
