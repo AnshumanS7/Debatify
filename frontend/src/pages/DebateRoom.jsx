@@ -7,7 +7,7 @@ const socket = io('http://localhost:5000'); // Update if hosted elsewhere
 
 const DebateRoom = () => {
   const { newsId, userId, team } = useParams();
-  const normalizedTeam = team.toLowerCase(); // Ensure team is always in lowercase
+  const normalizedTeam = team.trim(); // Ensure team is correctly passed
 
   const [timer, setTimer] = useState(30);
   const [messages, setMessages] = useState([]);
@@ -93,10 +93,13 @@ const DebateRoom = () => {
           🧠 Debate Room
         </h2>
 
-        {/* Team: For at Left Corner */}
-        <span className="team-info absolute top-4 left-4 text-lg font-medium text-indigo-400">
-          Team: <span className="capitalize">{normalizedTeam}</span>
-        </span>
+        <div className="team-box">
+          Team: 
+          <span 
+            className={`team-name ${normalizedTeam === 'Against' ? 'text-red' : normalizedTeam === 'For' ? 'text-green' : ''}`}>
+            {normalizedTeam}
+          </span>
+        </div>
 
         {/* Error */}
         {error && (
