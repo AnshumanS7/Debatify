@@ -1,0 +1,99 @@
+.debate-container {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2); /* same as debate-room */
+    border-radius: 12px;
+    width: 90%;
+    margin: 50px auto;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    color: #fff;
+  }
+  
+  .debate-heading {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 0 0 5px #000000, 0 0 10px #000000, 0 0 15px #000000;
+  }
+  
+  .debate-subtext {
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding: 10px 20px; /* Decreased left and right padding */
+    border: 2px solid #ffffff; /* Highlight box with white border */
+    border-radius: 8px; /* Optional: Round the corners */
+    background-color: rgb(255, 255, 255); /* Light white background for the box */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a glowing effect */
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  
+  
+  .team-selection {
+    margin-bottom: 30px;
+  }
+  
+  .team-button {
+    margin: 10px;
+    padding: 12px 28px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    background-color: #6bd67b;
+    transition: transform 0.2s, background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000;
+  }
+  
+  .team-button:hover {
+    transform: scale(1.05);
+    background-color: #4caf50;
+  }
+  
+  .selected-for {
+    background-color: #4caf50;
+  }
+  
+  .selected-against {
+    background-color: #f44336;
+  }
+  
+  .team-button.selected-against:hover {
+    background-color: #e53935;
+  }
+  
+  .join-button {
+    padding: 14px 32px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s, background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000;
+  }
+  
+  .join-button:hover {
+    transform: scale(1.05);
+    background-color: #1976d2;
+  }
+  
