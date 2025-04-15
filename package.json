@@ -1,0 +1,13 @@
+{
+  "name": "debatify",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run frontend\"",
+    "frontend": "cd frontend && npm start",
+    "server": "cd server && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,132 @@
+/* Container for the entire debate room */
+.debate-room-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 20px;
+  }
+  
+  /* Box that contains everything inside the debate room */
+  .debate-room-box {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    color: #333;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .header {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: #3b3b3b;
+  }
+  
+  .team-info {
+    font-size: 22px;       /* Increased from 18px */
+    font-weight: 700;      /* Bold */
+    color: #5c6ac4;        /* Same indigo-ish color */
+  }
+  
+  
+  .error-message {
+    text-align: center;
+    color: #f44336;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .turn-timer {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .timer {
+    font-weight: bold;
+    color: #f57c00;
+  }
+  
+  .messages-container {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 30px;
+  }
+  
+  .message-box {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+  }
+  
+  .my-message {
+    background-color: #e3f2fd;
+    border-left: 5px solid #1e88e5;
+  }
+  
+  .other-message {
+    background-color: #fff3e0;
+    border-left: 5px solid #ff7043;
+  }
+  
+  .message-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .message-body {
+    font-size: 16px;
+  }
+  
+  .input-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .message-input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+  }
+  
+  .message-input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+  }
+  
+  .send-button {
+    padding: 12px 20px;
+    background-color: #5c6ac4;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  
+  .send-button:hover {
+    background-color: #3f4b91;
+  }
+  
+  .send-button.disabled {
+    background-color: #b0bec5;
+    cursor: not-allowed;
+  }
+  
+  .send-button:active {
+    transform: scale(0.98);
+  }
+  
