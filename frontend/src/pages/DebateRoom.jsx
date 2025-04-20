@@ -64,7 +64,8 @@ const DebateRoom = () => {
   }, [newsId, userId, normalizedTeam]);
 
   const handleSendMessage = () => {
-    const isMyTurn = normalizedTeam === currentTurn?.toLowerCase();
+    const isMyTurn = normalizedTeam.toLowerCase() === currentTurn?.toLowerCase();
+
 
     if (!isMyTurn) {
       setError("Not your team's turn to speak");
@@ -83,7 +84,8 @@ const DebateRoom = () => {
     }
   };
 
-  const isMyTurnNow = normalizedTeam === currentTurn?.toLowerCase();
+  const isMyTurnNow = normalizedTeam.toLowerCase() === currentTurn?.toLowerCase();
+
 
   return (
     <div className="debate-room-container">
