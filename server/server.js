@@ -12,18 +12,24 @@ const debateRoutes = require('./routes/debateRoutes');
 
 dotenv.config();
 
+// Check for essential env variables
+if (!process.env.MONGO_URI || !process.env.JWT_SECRET || !process.env.NEWS_API_KEY) {
+  console.error('❌ Missing required environment variables in .env file.');
+  process.exit(1);
+}
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: '*',
-    methods: ['GET', 'POST']
-  }
+    methods: ['GET', 'POST'],
+  },
 });
 
-const debateRooms = {}; // per-room state
+const debateRooms = {}; // Keeps per-room state
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
@@ -33,54 +39,66 @@ app.use('/api/news', newsRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/debate', debateRoutes);
 
-// Root route
+// Root endpoint
 app.get('/', (req, res) => {
-  res.send('Debatify API Running');
+  res.send('🚀 Debatify API Running');
 });
 
-// DB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log('MongoDB connected'))
+// MongoDB connection
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('✅ MongoDB connected'))
   .catch((err) => {
-    console.error('MongoDB connection failed:', err);
+    console.error('❌ MongoDB connection failed:', err);
     process.exit(1);
   });
 
-// ======== SOCKET LOGIC ========
+// Timer logic per debate room
 const startTimerForRoom = (room) => {
   const debate = debateRooms[room];
   if (!debate) return;
 
-  clearInterval(debate.timerInterval); // Clear existing if any
+  clearInterval(debate.timerInterval);
   debate.timer = 30;
 
-  // Emit initial time
-  io.to(room).emit('timer-update', { timer: debate.timer, currentTurn: debate.currentTurn });
+  // Initial timer emit
+  io.to(room).emit('timer-update', {
+    timer: debate.timer,
+    currentTurn: debate.currentTurn,
+  });
 
   debate.timerInterval = setInterval(() => {
     debate.timer -= 1;
-    io.to(room).emit('timer-update', { timer: debate.timer, currentTurn: debate.currentTurn });
+    io.to(room).emit('timer-update', {
+      timer: debate.timer,
+      currentTurn: debate.currentTurn,
+    });
 
     if (debate.timer <= 0) {
-      // Time's up: switch turn
       debate.currentTurn = debate.currentTurn === 'for' ? 'against' : 'for';
       debate.timer = 30;
+
       io.to(room).emit('turn-change', debate.currentTurn);
-      io.to(room).emit('timer-update', { timer: debate.timer, currentTurn: debate.currentTurn });
+      io.to(room).emit('timer-update', {
+        timer: debate.timer,
+        currentTurn: debate.currentTurn,
+      });
     }
   }, 1000);
 };
 
+// Socket.io logic
 io.on('connection', (socket) => {
-  console.log('🔌 User connected:', socket.id);
+  console.log(`🔌 User connected: ${socket.id}`);
 
   socket.on('joinDebate', ({ newsId, userId, team }, callback) => {
     const room = `debate-${newsId}`;
-    socket.join(room);
+    const normalizedTeam = team?.toLowerCase();
 
-    const normalizedTeam = team.toLowerCase();
+    socket.join(room);
 
     if (!debateRooms[room]) {
       debateRooms[room] = {
@@ -91,12 +109,10 @@ io.on('connection', (socket) => {
         timer: 30,
         timerInterval: null,
       };
-
-      // Start timer for this room
       startTimerForRoom(room);
     }
 
-    // Send current state to the user
+    // Emit current debate state
     socket.emit('turn-change', debateRooms[room].currentTurn);
     socket.emit('timer-update', {
       timer: debateRooms[room].timer,
@@ -109,38 +125,34 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', ({ newsId, userId, team, message }) => {
     const room = `debate-${newsId}`;
     const debate = debateRooms[room];
+    const normalizedTeam = team?.toLowerCase();
 
     if (!debate) {
-      socket.emit('errorMessage', 'Debate room not found.');
-      return;
+      return socket.emit('errorMessage', 'Debate room not found.');
     }
-
-    const normalizedTeam = team.toLowerCase();
 
     if (normalizedTeam !== debate.currentTurn) {
-      console.log(`Blocked message: team=${normalizedTeam}, currentTurn=${debate.currentTurn}`);
-      socket.emit('errorMessage', 'Not your team\'s turn to speak.');
-      return;
+      return socket.emit('errorMessage', 'Not your team\'s turn to speak.');
     }
 
-    const userCount = normalizedTeam === 'for'
-      ? debate.forCounts[userId] || 0
-      : debate.againstCounts[userId] || 0;
+    const userCount =
+      normalizedTeam === 'for'
+        ? debate.forCounts[userId] || 0
+        : debate.againstCounts[userId] || 0;
 
     if (userCount >= 2) {
-      socket.emit('errorMessage', 'You have used both your chances.');
-      return;
+      return socket.emit('errorMessage', 'You have used both your chances.');
     }
 
-    // Store message and broadcast
     if (normalizedTeam === 'for') {
       debate.forCounts[userId] = userCount + 1;
     } else {
       debate.againstCounts[userId] = userCount + 1;
     }
 
-    debate.messages.push({ userId, team: normalizedTeam, message });
-    io.to(room).emit('newMessage', { userId, team: normalizedTeam, message });
+    const newMsg = { userId, team: normalizedTeam, message };
+    debate.messages.push(newMsg);
+    io.to(room).emit('newMessage', newMsg);
 
     // Switch turn
     debate.currentTurn = normalizedTeam === 'for' ? 'against' : 'for';
@@ -151,11 +163,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('🔌 User disconnected:', socket.id);
+    console.log(`🔌 User disconnected: ${socket.id}`);
+    // Optional: Clean up empty rooms or stop timers
   });
 });
 
+// Start server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 Server listening on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
