@@ -146,10 +146,10 @@
   
   .message-input {
     flex: 1;
-    padding: 10px;
+    padding: 7px;
     font-size: 16px;
     border: 1px solid #ccc;
-    border-radius: 20px;
+    border-radius: 18px;
     outline: none;
   }
   
