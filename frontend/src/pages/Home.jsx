@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom'; // Add this import
 import './Home.css';
 
 const technologySubcategories = ['Tesla', 'Elon Musk', 'DOGE', 'Apple'];
@@ -201,6 +202,13 @@ const Home = () => {
                     <a href={news.url} target="_blank" rel="noopener noreferrer" className="explore-btn">
                       📖 Read More
                     </a>
+                    {/* Debate Button */}
+                    <Link
+                      to={`/joindebate`} 
+                      className="debate-link"
+                    >
+                      🎙️ Debate
+                    </Link>
                   </div>
                 </div>
               </div>
