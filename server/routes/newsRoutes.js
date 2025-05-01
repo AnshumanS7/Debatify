@@ -15,7 +15,7 @@ const fetchAndStoreNews = async () => {
 
     // Fetch news from the external API
     const response = await axios.get(
-      `https://newsapi.org/v2/everything?q=tesla&from=2025-03-19&sortBy=publishedAt&apiKey=${apiKey}`
+      `https://newsapi.org/v2/everything?q=tesla&from=2025-03-25&sortBy=publishedAt&apiKey=${apiKey}`
       // If you're using query instead of category, use this:
       // `https://newsapi.org/v2/everything?q=${QUERY}&pageSize=10&apiKey=${apiKey}`
     );
