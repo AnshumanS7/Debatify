@@ -5,31 +5,34 @@ body {
   padding: 0;
   background-color: #f5f5f5; /* Light background color */
   color: #333;
+  animation: fadeIn 1.5s ease-out; /* Adding subtle animations */
 }
 
 h1 {
   font-size: 2.5rem;
-  color: #efef06; /* A vibrant color for headings */
+  color: #efef06;
+  font-weight: 700;
   text-align: center;
   margin-top: 20px;
-  font-weight: 700;
+
   text-shadow: 
-    2px 2px 0px black,   /* top-left shadow */
-    -2px 2px 0px black,  /* top-right shadow */
-    2px -2px 0px black,  /* bottom-left shadow */
-    -2px -2px 0px black; /* bottom-right shadow */
+    2px 2px 0px black,
+    -2px 2px 0px black,
+    2px -2px 0px black,
+    -2px -2px 0px black;
+
+  padding: 20px;
+  border: 3px solid #efef06;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
 }
 
-
-
-
-p {
-  color: #666;
-  font-size: 1rem;
-  line-height: 1.6;
-  text-align: center;
-}
-
+/* Link Styling */
 a {
   text-decoration: none;
   color: #ffffff;
@@ -42,13 +45,14 @@ a:hover {
 
 /* Navigation Bar Styles */
 nav {
-  background: linear-gradient(135deg, #6a4c9c, #2e3d65); /* Elegant purple gradient */
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  border-bottom: 4px solid black; /* Add a black line to the bottom border */
+  background: linear-gradient(135deg, #7b2ff7, #9b46b5); /* Purple-focused gradient */
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle elevation */
+  border-bottom: 3px solid rgba(0, 0, 0, 0.15); /* Light dark separator */
+  color: white;
+  font-size: 18px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-
 
 nav ul {
   list-style-type: none;
@@ -70,12 +74,10 @@ nav a {
 }
 
 nav a:hover {
-  background-color: #8BC34A; /* Green background on hover */
+  background-color: #c6c63a; /* Green background on hover */
   color: white; /* White text on hover */
   transform: scale(1.05); /* Slightly enlarge the element when hovered */
 }
-
-
 
 /* Dark Mode Styles */
 .dark {
@@ -84,7 +86,20 @@ nav a:hover {
 }
 
 /* Button Styling */
+button {
+  background-color: #7b2ff7; /* Matching button color to gradient */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
 
+button:hover {
+  background-color: #9b46b5; /* Hover effect */
+}
 
 /* Card-like Containers */
 .card {
@@ -112,8 +127,4 @@ nav a:hover {
   100% {
     opacity: 1;
   }
-}
-
-body {
-  animation: fadeIn 1.5s ease-out;
 }
