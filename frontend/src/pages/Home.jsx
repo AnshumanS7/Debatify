@@ -1,223 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom'; // Add this import
-import './Home.css';
-
-const technologySubcategories = ['Tesla', 'Elon Musk', 'DOGE', 'Apple'];
-const businessCountries = [
-  { code: 'us', name: 'United States' },
-  // You can add more countries later like: { code: 'in', name: 'India' }
-];
-
-const NEWS_API_KEY = '704e7f2351214e08a42bdd37e3f27d60';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import AboutSection from '../components/AboutSection';
 
 const Home = () => {
-  const [newsList, setNewsList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Technology');
-  const [selectedSubcategory, setSelectedSubcategory] = useState('Tesla');
-  const [selectedCountry, setSelectedCountry] = useState('us');
-
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-
-      if (selectedCategory === 'Technology') {
-        if (selectedSubcategory === 'Apple') {
-          // Get today's date (toDate)
-          const today = new Date();
-          const toDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-          // Get 7 days ago (fromDate)
-          const fromDate = new Date(today.setDate(today.getDate() - 7)) // 7 days ago
-            .toISOString()
-            .split('T')[0]; // Format as YYYY-MM-DD
-
-          // Fetch Apple news for the past 7 days
-          const response = await axios.get(
-            `https://newsapi.org/v2/everything?q=apple&from=${fromDate}&to=${toDate}&sortBy=popularity&apiKey=${NEWS_API_KEY}`
-          );
-          setNewsList(response.data.articles);
-        } else {
-          // Fetch other technology news (Tesla, Elon Musk, DOGE, etc.)
-          const response = await axios.get('http://localhost:5000/api/news');
-          setNewsList(response.data);
-        }
-      } else if (selectedCategory === 'Business') {
-        const response = await axios.get(
-          `https://newsapi.org/v2/top-headlines?country=${selectedCountry}&category=business&apiKey=${NEWS_API_KEY}`
-        );
-        setNewsList(response.data.articles);
-      }
-    } catch (error) {
-      console.error('Failed to fetch news:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const refreshNews = async () => {
-    try {
-      setRefreshing(true);
-
-      if (selectedCategory === 'Technology' && selectedSubcategory !== 'Apple') {
-        await axios.post('http://localhost:5000/api/news/refresh');
-      }
-
-      await fetchNews();
-    } catch (error) {
-      console.error('Failed to refresh news:', error);
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  useEffect(() => {
-    fetchNews();
-  }, [selectedCategory, selectedSubcategory, selectedCountry]);
-
-  const filteredNews = newsList.filter(
-    (news) =>
-      (selectedCategory === 'Technology'
-        ? news.title?.toLowerCase().includes(selectedSubcategory.toLowerCase()) ||
-          news.content?.toLowerCase().includes(selectedSubcategory.toLowerCase())
-        : true) &&
-      (news.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        news.content?.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
+  const isLoggedIn = !!localStorage.getItem('user');
   return (
-    <div className="home-container">
-      <div className="welcome-card">
-        <h1 className="welcome-title">
-          🎙️ Welcome to <span className="brand">Debatify</span>
-        </h1>
-        <p className="welcome-text">
-          Explore debates, quizzes, and real-world news. Dive into discussions that matter!
-        </p>
+    <div className="min-h-screen text-slate-100 pt-20 pb-12">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 pt-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 border border-slate-800 shadow-2xl shadow-primary-900/20 p-8 md:p-16 text-center isolate"
+        >
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden -z-10">
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                rotate: [0, 90, 0],
+                opacity: [0.3, 0.5, 0.3]
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-1/2 -left-1/2 w-full h-full bg-primary-600/20 blur-[120px] rounded-full"
+            />
+            <motion.div
+              animate={{
+                scale: [1, 1.5, 1],
+                x: [0, 100, 0],
+                opacity: [0.2, 0.4, 0.2]
+              }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-secondary-600/20 blur-[120px] rounded-full"
+            />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
+          </div>
+
+          <div className="relative z-10 max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="inline-block mb-6 px-4 py-1.5 rounded-full border border-slate-700 bg-slate-800/50 backdrop-blur-sm text-sm font-medium text-slate-300 shadow-sm"
+            >
+              The Future of Digital Discourse
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-4xl md:text-6xl lg:text-7xl font-display font-black mb-6 tracking-tight leading-tight"
+            >
+              <span className="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-sm">
+                Welcome to
+              </span>
+              <span className="bg-gradient-to-r from-primary-400 via-secondary-400 to-accent bg-clip-text text-transparent drop-shadow-lg ml-3 animate-pulse-slow">
+                Debatify
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-lg md:text-2xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+            >
+              Dive into real-world debates, challenge your knowledge with quizzes, and stay ahead with the latest news.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex flex-wrap justify-center gap-6"
+            >
+              {isLoggedIn ? (
+                <>
+                  <Link to="/joindebate" className="btn-primary group relative overflow-hidden flex items-center gap-3 px-8 py-4 text-lg">
+                    <span className="relative z-10 flex items-center gap-2 font-bold tracking-wide">
+                      Start Debating
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-transparent via-white to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  </Link>
+
+                  <Link to="/quiz" className="btn-secondary group flex items-center gap-3 px-8 py-4 text-lg backdrop-blur-md bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20">
+                    <span className="font-bold tracking-wide text-slate-200 group-hover:text-white transition-colors">
+                      Take a Quiz
+                    </span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/signup" className="btn-primary group relative overflow-hidden flex items-center gap-3 px-8 py-4 text-lg">
+                    <span className="relative z-10 flex items-center gap-2 font-bold tracking-wide">
+                      Get Started
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-transparent via-white to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  </Link>
+
+                  <Link to="/login" className="btn-secondary group flex items-center gap-3 px-8 py-4 text-lg backdrop-blur-md bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20">
+                    <span className="font-bold tracking-wide text-slate-200 group-hover:text-white transition-colors">
+                      Sign In
+                    </span>
+                  </Link>
+                </>
+              )}
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
 
-      <div className="news-header-bar">
-        <h2 className="news-header">📰 {selectedCategory} News</h2>
-
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <select
-            className="category-dropdown"
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setSearchTerm('');
-            }}
-          >
-            <option value="Technology">Technology</option>
-            <option value="Business">Business</option>
-          </select>
-
-          <input
-            type="text"
-            className="search-input"
-            placeholder="🔍 Search news..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-
-          <button className="refresh-btn" onClick={refreshNews} disabled={refreshing}>
-            {refreshing ? '⏳ Refreshing...' : '🔄 Refresh News'}
-          </button>
-        </div>
-      </div>
-
-      {/* Subcategory Tabs */}
-      {selectedCategory === 'Technology' && (
-        <div className="subcategory-tabs">
-          {technologySubcategories.map((cat) => (
-            <button
-              key={cat}
-              className={`subcategory-btn ${selectedSubcategory === cat ? 'active' : ''}`}
-              onClick={() => setSelectedSubcategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Business Country Filter */}
-      {selectedCategory === 'Business' && (
-        <div className="subcategory-tabs">
-          {businessCountries.map((country) => (
-            <button
-              key={country.code}
-              className={`subcategory-btn ${selectedCountry === country.code ? 'active' : ''}`}
-              onClick={() => setSelectedCountry(country.code)}
-            >
-              {country.name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {loading ? (
-        <p className="loading-news">⏳ Loading news...</p>
-      ) : (
-        <div className="news-list">
-          {filteredNews.length > 0 ? (
-            filteredNews.map((news, index) => (
-              <div className="news-card" key={index}>
-                <div className="news-inner">
-                  <div className="news-front">
-                    <img
-                      src={news.urlToImage || 'https://via.placeholder.com/400x200?text=No+Image'}
-                      alt="news"
-                      className="news-image"
-                    />
-                    <h3 className="news-title">{news.title}</h3>
-                    <p className="news-summary">
-                      {news.content ? `${news.content.slice(0, 120)}...` : 'No summary available.'}
-                    </p>
-                    <div className="news-meta">
-                      <span>
-                        <strong>Source:</strong> {news.source?.name || 'Unknown'}
-                      </span>
-                      <br />
-                      <span>
-                        <strong>Published:</strong> {formatDate(news.publishedAt)}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="news-back">
-                    <a href={news.url} target="_blank" rel="noopener noreferrer" className="explore-btn">
-                      📖 Read More
-                    </a>
-                    {/* Debate Button */}
-                    <Link
-                      to={`/joindebate`} 
-                      className="debate-link"
-                    >
-                      🎙️ Debate
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="no-news">🚫 No news articles found.</p>
-          )}
-        </div>
-      )}
+      {/* About Section */}
+      <AboutSection />
     </div>
   );
 };

@@ -13,11 +13,15 @@ const fetchAndStoreNews = async () => {
   try {
     const apiKey = process.env.NEWS_API_KEY;
 
+    // Calculate date for "yesterday" or "today" to get recent news
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const fromDate = yesterday.toISOString().split('T')[0];
+
     // Fetch news from the external API
     const response = await axios.get(
-      `https://newsapi.org/v2/everything?q=tesla&from=2025-03-25&sortBy=publishedAt&apiKey=${apiKey}`
-      // If you're using query instead of category, use this:
-      // `https://newsapi.org/v2/everything?q=${QUERY}&pageSize=10&apiKey=${apiKey}`
+      `https://newsapi.org/v2/everything?q=technology&from=${fromDate}&sortBy=publishedAt&apiKey=${apiKey}`
     );
 
     const articles = response.data.articles;

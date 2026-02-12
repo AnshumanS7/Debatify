@@ -1,37 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import AnimatedBackground from './components/AnimatedBackground';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
-import JoinDebate from './pages/JoinDebate'; // adjust path as needed
+import NewsFeed from './pages/NewsFeed';
+import JoinDebate from './pages/JoinDebate';
 import DebateRoom from './pages/DebateRoom';
-
-import './index.css';
+import NewsDetails from './pages/NewsDetails';
+import QuizPage from './pages/QuizPage';
+import QualifyingQuiz from './pages/QualifyingQuiz';
+import DebateLobby from './pages/DebateLobby';
+import { PrivateRoute, PublicRoute } from './auth.jsx';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-800">
+    <div className="min-h-screen text-slate-200 font-sans relative">
+      <AnimatedBackground />
       <Navbar />
       <Routes>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+        {/* Public routes (redirect logged-in users away from login/signup) */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+
+        {/* Semi-public routes (accessible to all, but with in-page auth checks) */}
+        <Route path="/home" element={<Home />} />
         <Route path="/joindebate" element={<JoinDebate />} />
-        <Route path="/debate-room/:newsId/:userId/:team" element={<DebateRoom />} />
-        <Route
-          path="/home"
-          element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* Private routes (require authentication) */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/news-feed" element={<NewsFeed />} />
+          <Route path="/news/:id" element={<NewsDetails />} />
+          <Route path="/qualifying-quiz/:newsId/:userId/:team" element={<QualifyingQuiz />} />
+          <Route path="/debate-lobby/:newsId/:userId/:team" element={<DebateLobby />} />
+          <Route path="/debate/:roomId" element={<DebateRoom />} />
+          <Route path="/debate-room/:newsId/:userId/:team" element={<DebateRoom />} />
+          <Route path="/quiz" element={<QuizPage />} />
+        </Route>
+
+        {/* Default redirect */}
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </div>
   );
