@@ -81,4 +81,48 @@ router.post('/refresh', async (req, res) => {
   }
 });
 
+// ===== NEWS API PROXY ENDPOINTS =====
+// These proxy NewsAPI calls through the server to avoid browser CORS restrictions
+
+// Proxy for /v2/everything (Technology category searches)
+router.get('/proxy/everything', async (req, res) => {
+  try {
+    const apiKey = process.env.NEWS_API_KEY;
+    const { q, from, to, sortBy } = req.query;
+
+    let url = `https://newsapi.org/v2/everything?q=${q || 'technology'}&apiKey=${apiKey}`;
+    if (from) url += `&from=${from}`;
+    if (to) url += `&to=${to}`;
+    if (sortBy) url += `&sortBy=${sortBy}`;
+
+    const response = await axios.get(url);
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error('[✗] News proxy (everything) failed:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to fetch news',
+      articles: [],
+    });
+  }
+});
+
+// Proxy for /v2/top-headlines (Business category by country)
+router.get('/proxy/top-headlines', async (req, res) => {
+  try {
+    const apiKey = process.env.NEWS_API_KEY;
+    const { country, category } = req.query;
+
+    const url = `https://newsapi.org/v2/top-headlines?country=${country || 'us'}&category=${category || 'business'}&apiKey=${apiKey}`;
+
+    const response = await axios.get(url);
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error('[✗] News proxy (top-headlines) failed:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to fetch news',
+      articles: [],
+    });
+  }
+});
+
 module.exports = router;

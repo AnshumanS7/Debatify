@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 const technologySubcategories = ['Tesla', 'Elon Musk', 'DOGE', 'Apple', 'AI', 'Crypto'];
 const businessCountries = [
@@ -10,8 +11,6 @@ const businessCountries = [
     { code: 'gb', name: 'United Kingdom' },
     { code: 'jp', name: 'Japan' }
 ];
-
-const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY || '704e7f2351214e08a42bdd37e3f27d60';
 
 const NewsFeed = () => {
     const [newsList, setNewsList] = useState([]);
@@ -29,30 +28,24 @@ const NewsFeed = () => {
 
             if (selectedCategory === 'Technology') {
                 let query = selectedSubcategory.toLowerCase();
+                const params = { q: query };
 
                 if (selectedSubcategory === 'Apple') {
                     const today = new Date();
                     const toDate = today.toISOString().split('T')[0];
                     const fromDate = new Date(today.setDate(today.getDate() - 7)).toISOString().split('T')[0];
-                    query = `apple&from=${fromDate}&to=${toDate}&sortBy=popularity`;
+                    params.from = fromDate;
+                    params.to = toDate;
+                    params.sortBy = 'popularity';
                 }
 
-                if (selectedSubcategory !== 'Apple') {
-                    const response = await axios.get(
-                        `https://newsapi.org/v2/everything?q=${query}&apiKey=${NEWS_API_KEY}`
-                    );
-                    setNewsList(response.data.articles);
-                } else {
-                    const response = await axios.get(
-                        `https://newsapi.org/v2/everything?q=${query}&apiKey=${NEWS_API_KEY}`
-                    );
-                    setNewsList(response.data.articles);
-                }
+                const response = await axios.get(`${API_BASE_URL}/api/news/proxy/everything`, { params });
+                setNewsList(response.data.articles);
 
             } else if (selectedCategory === 'Business') {
-                const response = await axios.get(
-                    `https://newsapi.org/v2/top-headlines?country=${selectedCountry}&category=business&apiKey=${NEWS_API_KEY}`
-                );
+                const response = await axios.get(`${API_BASE_URL}/api/news/proxy/top-headlines`, {
+                    params: { country: selectedCountry, category: 'business' }
+                });
                 setNewsList(response.data.articles);
             }
         } catch (error) {
