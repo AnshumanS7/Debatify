@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AnimatedBackground from './components/AnimatedBackground';
 import Login from './pages/Login';
@@ -15,10 +15,13 @@ import DebateLobby from './pages/DebateLobby';
 import { PrivateRoute, PublicRoute } from './auth.jsx';
 
 const App = () => {
+  const location = useLocation();
+  const hideNavbar = ['/login', '/signup'].includes(location.pathname);
+
   return (
     <div className="min-h-screen text-slate-200 font-sans relative">
       <AnimatedBackground />
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <Routes>
         {/* Public routes (redirect logged-in users away from login/signup) */}
         <Route element={<PublicRoute />}>

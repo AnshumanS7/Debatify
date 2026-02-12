@@ -11,6 +11,15 @@
 
 > Dive into real-world debates, challenge your knowledge with quizzes, and stay ahead with the latest news.
 
+<p align="center">
+  <a href="https://debatify-xi.vercel.app/"><img src="https://img.shields.io/badge/🌐_Live_Demo-Debatify-blue?style=for-the-badge" alt="Live Demo" /></a>
+</p>
+
+| | URL |
+|---|---|
+| 🌐 **Frontend** | [debatify-xi.vercel.app](https://debatify-xi.vercel.app/) |
+| ⚙️ **Backend API** | [debatify-5isb.onrender.com](https://debatify-5isb.onrender.com) |
+
 ---
 
 ## ✨ Key Features
@@ -151,11 +160,21 @@ The frontend will be available at `http://localhost:5173` and the backend at `ht
 
 ## 🌐 Deployment
 
+The app is deployed and live:
+
+| Service | Platform | URL |
+|---------|----------|-----|
+| Frontend | Vercel | [debatify-xi.vercel.app](https://debatify-xi.vercel.app/) |
+| Backend | Render | [debatify-5isb.onrender.com](https://debatify-5isb.onrender.com) |
+
 ### Frontend → Vercel
 1. Import the repo on [vercel.com](https://vercel.com)
 2. Set **Root Directory** to `frontend`
-3. Add env variable: `VITE_API_URL` = your backend URL
-4. Deploy
+3. Set **Framework Preset** to `Vite`
+4. Add env variables:
+   - `VITE_API_URL` = your Render backend URL
+   - `VITE_NEWS_API_KEY` = your NewsAPI key
+5. Deploy
 
 ### Backend → Render
 1. Create a new **Web Service** on [render.com](https://render.com)
@@ -163,8 +182,11 @@ The frontend will be available at `http://localhost:5173` and the backend at `ht
 3. **Build Command**: `npm install`
 4. **Start Command**: `npm start`
 5. Add env variables: `MONGO_URI`, `JWT_SECRET`, `NEWS_API_KEY`, `FRONTEND_URL`
+   - Set `FRONTEND_URL` to your Vercel deployment URL for CORS
 
 > A `render.yaml` is included for one-click deployment via Render Blueprints.
+
+> **Note:** Render's free tier spins down after 15 minutes of inactivity. The first request after idle may take ~30-60 seconds.
 
 ---
 
